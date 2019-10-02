@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/passenger.dir/main.c.o CMakeFiles/passenger.dir/animal.c.o CMakeFiles/passenger.dir/human.c.o  -o passenger 
