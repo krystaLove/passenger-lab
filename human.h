@@ -1,4 +1,4 @@
-typedef struct Human{
+typedef struct{
     int id;
     char *name;
     int size;

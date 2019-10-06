@@ -8,10 +8,9 @@ int compareHuman(const Human *a, const Human *b){
 }
 
 void readHuman(Human *human, FILE *in){
-    fscanf(in, "%d", &(human->id));
     human->name = (char*) malloc(sizeof(char) * MAX_CHAR);
-    fgets(human->name, MAX_CHAR, in);
-    fscanf(in, "%d %d", &(human->size), &(human->m));
+
+    fscanf(in, "%d %s %d %d", &(human->id), human->name, &(human->size), &(human->m));
 
     if(human->m == 0) return;
 
