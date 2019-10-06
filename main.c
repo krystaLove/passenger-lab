@@ -27,7 +27,7 @@ int main(int argc, char** argv){
     for(i = 0; i<human_len; i++) readHuman(&(humans[i]), human_in);
     for(i = 0; i<carriages_len; i++) readCarriage(&(carriages[i]), carriages_in);
 
-    sortAnimals(animals, animals_len, &compareAnimal);
+    sortAnimals(animals, animals_len, &compareAnimalBySize);
 
 #ifdef DEBUG
     fprintf(log, "[animals = %d]\n", animals_len);

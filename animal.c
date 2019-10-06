@@ -3,8 +3,12 @@
 #include "animal.h"
 #define MAX_CHAR 1000
 
-int compareAnimal(Animal *an1, Animal *an2){
-    return an1->size - an2->size;
+int compareAnimalBySize(Animal a, Animal b){
+    return a.size - b.size;
+}
+
+int compareAnimalById(Animal a, Animal b){
+    return a.id - b.id;
 }
 
 void readAnimal(Animal *animal, FILE *in){
@@ -21,11 +25,11 @@ static void swap(Animal *a, Animal *b){
     *b = temp;
 }
 
-void sortAnimals(Animal *animals, int length, int (*comp)(Animal*, Animal*)){
+void sortAnimals(Animal *animals, int length, int (*comp)(Animal, Animal)){
     int i, j;
     for(i = 0; i < length - 1; i++){
         for(j = i + 1; j < length; j++){
-            if((*comp)(&animals[i], &animals[j]) > 0){
+            if((*comp)(animals[i], animals[j]) > 0){
                 swap(&animals[i], &animals[j]);
             }
         }

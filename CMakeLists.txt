@@ -3,4 +3,4 @@ project(passenger C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(passenger main.c animal.c human.c human.h animal.h)
+add_executable(passenger main.c animal.c human.c carriage.c human.h animal.h carriage.h)
