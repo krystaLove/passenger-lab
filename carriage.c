@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "carriage.h"
-
+#define MAX_CAPACITY 20;
 void outputCarriages(Carriage *carriages, int length, FILE* out){
     int i;
     for(i = 0; i < length; i++){
+        printf("{%d %d} ", carriages[i].elements, carriages[i].capacity);
         if(carriages[i].elements == 0){
             fprintf(out, "There are no passengers in %d carriage\n", i + 1);
             continue;
@@ -23,7 +24,7 @@ void outputCarriage(Carriage carriage, FILE *out){
 
 void readCarriage(Carriage *carriage, FILE* in){
     carriage->elements = 0;
-    carriage->capacity = 2;
+    carriage->capacity = MAX_CAPACITY;
     fscanf(in, "%d", &(carriage->type));
     carriage->humans = NULL;
     carriage->animals = NULL;

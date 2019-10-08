@@ -64,8 +64,9 @@ void givePlaceForAnimals(Carriage **carriages, int carriages_len, Animal *animal
             cur_carriage->animals = (Animal*) malloc(sizeof(Animal) * cur_carriage->capacity);
         }
         while(animal_p < animals_len && cur_size - animals[animal_p].size >= 0){
+            animals[animal_p].carriage = i + 1;
             (cur_carriage->elements)++;
-            if(cur_carriage->elements > cur_carriage->capacity){
+            if(cur_carriage->elements >= cur_carriage->capacity){
                 (cur_carriage->capacity) *= 2;
                 cur_carriage->animals = realloc(cur_carriage->animals, cur_carriage->capacity);
             }
@@ -87,8 +88,9 @@ void givePlaceForHumans(Carriage **carriages, int carriages_len, Human *humans, 
             cur_carriage->humans = (Human*) malloc(sizeof(Human) * cur_carriage->capacity);
         }
         while(human_p < humans_len && cur_size - humans[human_p].size >= 0){
+            humans[human_p].carriage = i + 1;
             (cur_carriage->elements)++;
-            if(cur_carriage->elements > cur_carriage->capacity){
+            if(cur_carriage->elements >= cur_carriage->capacity){
                 (cur_carriage->capacity) *= 2;
                 cur_carriage->humans = realloc(cur_carriage->humans, cur_carriage->capacity);
             }
@@ -118,6 +120,10 @@ int main(int argc, char** argv){
     givePlaceForAnimals(&carriages, carriages_len, animals, animals_len, carriage_size);
     givePlaceForHumans(&carriages, carriages_len, humans, human_len, carriage_size);
     outputCarriages(carriages, carriages_len, out);
+
+    fprintf(out, "\nHumans: \n");
+    linkHumansWithSortedAnimals(humans, human_len, animals, animals_len);
+    outputHumans(humans, human_len, out);
 
 #ifdef DEBUG
     int log_i;

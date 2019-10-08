@@ -2,6 +2,7 @@ typedef struct {
     int id;
     char name[100];
     int size;
+    int carriage;
 } Animal;
 int compareAnimalById(Animal, Animal);
 int compareAnimalBySize(Animal, Animal);

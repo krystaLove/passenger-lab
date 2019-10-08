@@ -14,6 +14,8 @@ int compareHumanById(Human a, Human b){
 void readHuman(Human *human, FILE *in){
     human->animalsID = NULL;
     human->animals = NULL;
+    human->validAmount = 0;
+    human->carriage = -1;
 
     char *buf = (char*) malloc(sizeof(char) * MAX_CHAR);
 
@@ -24,10 +26,34 @@ void readHuman(Human *human, FILE *in){
 
     if(human->amountAnimals == 0) return;
     human->animalsID = (int*) malloc(sizeof(int) * human->amountAnimals);
+    human->animals = (Animal*) malloc(sizeof(Animal) * human->amountAnimals);
 
     int i;
     for(i = 0; i < human->amountAnimals; i++){
         fscanf(in, "%d", &(human->animalsID[i]));
+    }
+}
+void linkHumansWithSortedAnimals(Human *humans, int human_len, Animal *animals, int animals_len){
+    sortAnimals(animals, animals_len, compareAnimalById);
+    int i;
+    for(i = 0; i < human_len; i++){
+        Human *cur_human = &humans[i];
+        int j = 0, k = 0;
+        int animal_p = 0;
+        while(j < cur_human->amountAnimals && k < animals_len){
+            if(cur_human->animalsID[j] < animals[k].id){
+                j++;
+                continue;
+            }
+            if(cur_human->animalsID[j] > animals[k].id){
+                k++;
+            } else {
+                cur_human->animals[animal_p++] = animals[k];
+                j++;
+                k++;
+            }
+        }
+        cur_human->validAmount = animal_p;
     }
 }
 void outputHuman(Human human, FILE *out){
@@ -40,14 +66,24 @@ void outputHuman(Human human, FILE *out){
 }
 
 void outputHumans(Human *humans, int length, FILE* out){
-    fprintf(out, "+--------------------+------+------+\n");
-    fprintf(out, "|NAME                |ID    |SIZE  |\n");
-    fprintf(out, "+--------------------+------+------+\n");
-    int i;
+    fprintf(out, "+--------------------+------+------+--------+\n");
+    fprintf(out, "|HUMAN NAME          |ID    |SIZE  |CARRIAGE|\n");
+    fprintf(out, "+--------------------+------+------+--------+\n");
+    int i, j;
     for(i = 0; i < length; i++){
-        fprintf(out, "|%-20s|%-6d|%-6d|\n", humans[i].name, humans[i].id, humans[i].size);
+        fprintf(out, "|%-20s|%-6d|%-6d|%-8d|\n", humans[i].name, humans[i].id, humans[i].size, humans[i].carriage);
+        if(humans[i].validAmount > 0){
+            fprintf(out, "+--------------------+------+------+--------+\n");
+            fprintf(out, "|HIS ANIMALS                                |\n");
+            //fprintf(out, "+--------------------+------+------+--------+\n");
+            outputAnimals(humans[i].animals, humans[i].validAmount, out);
+            //fprintf(out, "+--------------------+------+------+--------+\n");
+            fprintf(out, "|END OF ANIMALS                             |\n");
+            fprintf(out, "+--------------------+------+------+--------+\n");
+        }
+
     }
-    fprintf(out, "+--------------------+------+------+\n");
+    fprintf(out, "+--------------------+------+------+--------+\n");
 }
 void freeHumans(Human *humans, int length){
     int i;
