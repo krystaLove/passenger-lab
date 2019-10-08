@@ -23,6 +23,7 @@ void outputCarriage(Carriage carriage, FILE *out){
 
 void readCarriage(Carriage *carriage, FILE* in){
     carriage->elements = 0;
+    carriage->capacity = 2;
     fscanf(in, "%d", &(carriage->type));
     carriage->humans = NULL;
     carriage->animals = NULL;
