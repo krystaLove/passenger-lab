@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "animal.h"
-#define MAX_CHAR 1000
+#define MAX_CHAR 100
 
 int compareAnimalBySize(Animal a, Animal b){
     return a.size - b.size;
@@ -12,8 +13,10 @@ int compareAnimalById(Animal a, Animal b){
 }
 
 void readAnimal(Animal *animal, FILE *in){
-    animal->name = (char*) malloc(sizeof(char) * MAX_CHAR);
-    fscanf(in, "%d %s %d", &(animal->id), animal->name, &(animal->size));
+    char *buf = (char*) malloc(sizeof(char) * MAX_CHAR);
+    fscanf(in, "%d %s %d", &(animal->id), buf, &(animal->size));
+    strncpy(animal->name, buf, MAX_CHAR);
+    free(buf);
 }
 void outputAnimal(Animal animal, FILE* out){
     fprintf(out, "id = %d\nname = %s\nsize = %d\n", animal.id, animal.name, animal.size);
@@ -34,4 +37,17 @@ void sortAnimals(Animal *animals, int length, int (*comp)(Animal, Animal)){
             }
         }
     }
+}
+void outputAnimals(Animal *animals, int length, FILE* out){
+    fprintf(out, "+--------------------+------+------+\n");
+    fprintf(out, "|NAME                |ID    |SIZE  |\n");
+    fprintf(out, "+--------------------+------+------+\n");
+    int i;
+    for(i = 0; i < length; i++){
+        fprintf(out, "|%-20s|%-6d|%-6d|\n", animals[i].name, animals[i].id, animals[i].size);
+    }
+    fprintf(out, "+--------------------+------+------+\n");
+}
+void freeAnimals(Animal *animals, int length){
+    free(animals);
 }

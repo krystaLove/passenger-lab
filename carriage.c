@@ -1,15 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "carriage.h"
 
 void outputCarriages(Carriage *carriages, int length, FILE* out){
     int i;
     for(i = 0; i < length; i++){
+        if(carriages[i].elements == 0){
+            fprintf(out, "There are no passengers in %d carriage\n", i + 1);
+            continue;
+        }
         fprintf(out, "The %d carriage include %d passengers:\n", i + 1, carriages[i].elements);
-        if(carriages[i].elements == 0) return;
         if(carriages[i].type == HUMAN){
-            outputHuman(*(carriages[i].human), out);
+            outputHumans(carriages[i].humans, carriages[i].elements, out);
         } else {
-            outputAnimal(*(carriages[i].animal), out);
+            outputAnimals(carriages[i].animals, carriages[i].elements, out);
         }
     }
 }
@@ -18,5 +22,20 @@ void outputCarriage(Carriage carriage, FILE *out){
 }
 
 void readCarriage(Carriage *carriage, FILE* in){
+    carriage->elements = 0;
     fscanf(in, "%d", &(carriage->type));
+    carriage->humans = NULL;
+    carriage->animals = NULL;
+}
+void freeCarriages(Carriage *carriages, int length){
+    int i;
+    for(i = 0; i < length; i++){
+        if(carriages->elements == 0) continue;
+        if(carriages[i].type == HUMAN){
+            free(carriages[i].humans);
+        } else {
+            free(carriages[i].animals);
+        }
+    }
+    free(carriages);
 }
