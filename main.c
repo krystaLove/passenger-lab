@@ -52,6 +52,53 @@ int readCarriagesData(Carriage **carriages, int *carriage_size){
     return carriages_len;
 }
 
+void givePlaceForAnimals(Carriage **carriages, int carriages_len, Animal *animals, int animals_len, int carriage_size){
+    int i;
+    Carriage *carriage_arr = *carriages;
+    int animal_p = 0;
+    for(i = 0; i < carriages_len && animal_p < animals_len; i++){
+        if(carriage_arr[i].type == HUMAN) continue;
+        int cur_size = carriage_size;
+        Carriage *cur_carriage = &carriage_arr[i];
+        if(cur_size - animals[animal_p].size >= 0 && cur_carriage->animals == NULL){
+            cur_carriage->animals = (Animal*) malloc(sizeof(Animal) * cur_carriage->capacity);
+        }
+        while(animal_p < animals_len && cur_size - animals[animal_p].size >= 0){
+            (cur_carriage->elements)++;
+            if(cur_carriage->elements > cur_carriage->capacity){
+                (cur_carriage->capacity) *= 2;
+                cur_carriage->animals = realloc(cur_carriage->animals, cur_carriage->capacity);
+            }
+            cur_carriage->animals[cur_carriage->elements - 1] = animals[animal_p];
+            cur_size -= animals[animal_p].size;
+            animal_p++;
+        }
+    }
+}
+void givePlaceForHumans(Carriage **carriages, int carriages_len, Human *humans, int humans_len, int carriage_size){
+    int i;
+    Carriage *carriage_arr = *carriages;
+    int human_p = 0;
+    for(i = 0; i < carriages_len && human_p < humans_len; i++){
+        if(carriage_arr[i].type == ANIMAL) continue;
+        int cur_size = carriage_size;
+        Carriage *cur_carriage = &carriage_arr[i];
+        if(cur_size - humans[human_p].size >= 0 && cur_carriage->humans == NULL){
+            cur_carriage->humans = (Human*) malloc(sizeof(Human) * cur_carriage->capacity);
+        }
+        while(human_p < humans_len && cur_size - humans[human_p].size >= 0){
+            (cur_carriage->elements)++;
+            if(cur_carriage->elements > cur_carriage->capacity){
+                (cur_carriage->capacity) *= 2;
+                cur_carriage->humans = realloc(cur_carriage->humans, cur_carriage->capacity);
+            }
+            cur_carriage->humans[cur_carriage->elements - 1] = humans[human_p];
+            cur_size -= humans[human_p].size;
+            human_p++;
+        }
+    }
+}
+
 int main(int argc, char** argv){
     FILE *out = fopen(OUT_PATH, "w++");
     FILE *log = fopen(LOG_PATH, "w++");
@@ -67,6 +114,10 @@ int main(int argc, char** argv){
 
     sortAnimals(animals, animals_len, &compareAnimalBySize);
     sortHumans(humans, human_len, &compareHumanBySize);
+
+    givePlaceForAnimals(&carriages, carriages_len, animals, animals_len, carriage_size);
+    givePlaceForHumans(&carriages, carriages_len, humans, human_len, carriage_size);
+    outputCarriages(carriages, carriages_len, out);
 
 #ifdef DEBUG
     int log_i;
